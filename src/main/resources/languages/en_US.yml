@@ -1,0 +1,9 @@
+arena-you-joined: "&7You joined the arena!"
+arena-you-left: "&7You left the arena!"
+arena-you-are-already-in: "&cYou are already in the arena!"
+arena-already-started: "&cThe arena has already started!"
+arena-you-cant-join-while-started: "&cYou can't join the arena while it's started!"
+arena-started: "&7The arena has started!"
+arena-stopped: "&7The arena has stopped!"
+
+arena-hit: "&7You hit %player%!"

@@ -1,0 +1,58 @@
+crate-head: asd
+
+snow-falling:
+  enabled: true
+  regions: [spawn, nopvp]
+  snow-amount: 10
+  snow-interval: 10
+
+snowball-fight:
+  enabled: true
+  regions: [spawn, snowballpvp]
+  # Available Placeholders:
+  # %nsanta_snowballfight_point%
+  points-per-hit: 10
+
+christmas-tree:
+  enabled: true
+  tree-location:
+    world: "world"
+    x: 0
+    y: 90
+    z: 0
+  npc-location:
+    world: "world"
+    x: 0
+    y: 90
+    z: 0
+  ingredients:
+    - "SPRUCE_LOG:128"
+    - "SNOW_BLOCK:100"
+    - "REDSTONE_BLOCK:12"
+  # everyone / contributors
+  reward-players: "everyone"
+  complete-rewards:
+    - "DIAMOND:5"
+  light-settings:
+    enabled: true
+    particle: "FIREWORKS_SPARK"
+    particle-amount: 10
+    radius: 5
+    rotation-speed: 0.1
+
+advanced-snowman:
+  enabled: true
+  name: "&b%player%'s Snowman"
+  heart: 30
+  damage-multiplier: 5
+  rewards:
+    enabled: true
+    money-per-kill: 10.0
+    items-per-kill:
+      - "DIAMOND:5"
+      - "GOLD_INGOT:1"
+    monsters:
+      - ZOMBIE
+      - SKELETON
+      - SPIDER
+      - CREEPER

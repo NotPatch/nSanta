@@ -3,3 +3,6 @@ version: '1.0-SNAPSHOT'
 main: com.notpatch.nsanta.NSanta
 api-version: '1.21'
 authors: [ NotPatch ]
+
+commands:
+    nsanta:
