@@ -6,4 +6,7 @@ arena-you-cant-join-while-started: "&cYou can't join the arena while it's starte
 arena-started: "&7The arena has started!"
 arena-stopped: "&7The arena has stopped!"
 
+tree-integredient-added: "&7%player% added %integredient% to the tree!"
+tree-integredient-finish: "&7%player% completed the tree!"
+
 arena-hit: "&7You hit %player%!"

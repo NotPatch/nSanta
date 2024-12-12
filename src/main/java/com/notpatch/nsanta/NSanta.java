@@ -5,6 +5,8 @@ import com.notpatch.nsanta.command.CommandGui;
 import com.notpatch.nsanta.configuration.MenuConfiguration;
 import com.notpatch.nsanta.configuration.TreeData;
 import com.notpatch.nsanta.event.EventTriggerListener;
+import com.notpatch.nsanta.listener.ChunkLoadListener;
+import com.notpatch.nsanta.listener.NPCListener;
 import com.notpatch.nsanta.listener.SnowmanListener;
 import com.notpatch.nsanta.manager.IntegrationManager;
 import com.notpatch.nsanta.model.LanguageLoader;
@@ -22,6 +24,8 @@ public final class NSanta extends JavaPlugin {
     private ChristmasLightTask christmasLightTask;
 
     private LanguageLoader languageLoader;
+
+    private NPCSanta npcSanta;
 
 
     @Override
@@ -52,12 +56,16 @@ public final class NSanta extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new SnowmanListener(), this);
         getServer().getPluginManager().registerEvents(new EventTriggerListener(), this);
+        getServer().getPluginManager().registerEvents(new NPCListener(), this);
+        getServer().getPluginManager().registerEvents(new ChunkLoadListener(), this);
 
         // Commands
         getCommand("nsanta").setExecutor(new CommandGui());
 
         // PacketEvents
         initPacketEvents();
+
+        npcSanta = new NPCSanta();
     }
 
     @Override
@@ -65,6 +73,9 @@ public final class NSanta extends JavaPlugin {
         if(christmasLightTask != null){
             christmasLightTask.cancel();
         }
+        npcSanta.deleteNPC();
+
+        ChunkLoadListener.removeBoxBlocks();
     }
 
     public static NSanta getInstance() {
@@ -93,5 +104,11 @@ public final class NSanta extends JavaPlugin {
         PacketEvents.getAPI().load();
         PacketEvents.getAPI().init();
     }
+
+
+    public NPCSanta getNPCSanta() {
+        return npcSanta;
+    }
+
 
 }

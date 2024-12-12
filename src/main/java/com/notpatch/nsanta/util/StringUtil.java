@@ -28,6 +28,14 @@ public class StringUtil {
         return hexColor(NSanta.getInstance().getConfig().getString(path));
     }
 
+    public static String get(String path){
+        return NSanta.getInstance().getConfig().getString(path);
+    }
+
+    public static Object get(Object path){
+        return NSanta.getInstance().getConfig().get(path.toString());
+    }
+
     public static List<String> getColoredList(List<String> list) {
         return list.stream()
                 .map(StringUtil::hexColor)

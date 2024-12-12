@@ -2,6 +2,7 @@ package com.notpatch.nsanta;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityAnimation;
+import com.notpatch.nsanta.util.StringUtil;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.SkinTrait;
@@ -11,21 +12,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
+
 public class NPCSanta {
 
-    private NPC santaNPC = getOrCreateSantaNPC();
-
-    public void createSantaNPC(Location location) {
-        if (santaNPC == null) {
-            santaNPC = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Santa Claus");
-        }
-
-        if (!santaNPC.isSpawned()) {
-            santaNPC.spawn(location);
-        } else {
-            santaNPC.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-        }
-    }
+    public NPC santaNPC = getOrCreateSantaNPC();
+    private UUID santaUUID;
 
     private void sendNPCAnimation() {
         WrapperPlayServerEntityAnimation animationPacket = new WrapperPlayServerEntityAnimation(
@@ -37,8 +29,10 @@ public class NPCSanta {
         );
     }
 
-    public void smoothRotateNPC(float targetYaw, float targetPitch, long duration) {
+    public void smoothRotateNPC(long duration) {
         Location initialLocation = santaNPC.getStoredLocation();
+        float targetYaw = Float.parseFloat(StringUtil.get("christmas-tree.npc-location.turnYaw"));
+        float targetPitch = Float.parseFloat(StringUtil.get("christmas-tree.npc-location.turnPitch"));
 
         if (!santaNPC.isSpawned()) return;
 
@@ -89,15 +83,28 @@ public class NPCSanta {
 
 
     private NPC getOrCreateSantaNPC() {
+        if (santaUUID == null) {
+            santaUUID = UUID.fromString("0eedfd1f-763c-483a-816a-f00a93868efa");
+        }
+
         for (NPC npc : CitizensAPI.getNPCRegistry()) {
-            if (npc.getName().equals("Santa Claus")) {
+            if (npc.getUniqueId().equals(santaUUID)) {
+                npc.getOrAddTrait(SkinTrait.class).setSkinName(StringUtil.get("santa-skin-name"),true);
+                npc.teleport(new Location(Bukkit.getWorld("world"), -6, -16, -52), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 return npc;
             }
         }
 
-        NPC newSantaNPC = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Santa Claus");
-        newSantaNPC.getOrAddTrait(SkinTrait.class).setSkinName("faat");
+        NPC newSantaNPC = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, santaUUID, 836, StringUtil.getColored("santa-name"));
+        newSantaNPC.getOrAddTrait(SkinTrait.class).setSkinName(StringUtil.get("santa-skin-name"), true);
+        newSantaNPC.spawn(new Location(Bukkit.getWorld("world"), -6, -16, -52));
         return newSantaNPC;
     }
+
+    public void deleteNPC(){
+        NPC npc = getOrCreateSantaNPC();
+        npc.destroy();
+    }
+
 
 }

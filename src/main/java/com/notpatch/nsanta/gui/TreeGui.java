@@ -10,11 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -63,17 +60,6 @@ public class TreeGui extends FastInv implements Listener {
 
     }
 
-    @EventHandler
-    public void onClick(PlayerInteractEvent e){
-        Player p = e.getPlayer();
-        if(e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(e.getClickedBlock() == null) return;
-        if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) return;
-        ItemStack item = p.getInventory().getItemInMainHand();
-        doProcess(p, item, e);
-
-    }
-
     @Override
     public void onClick(InventoryClickEvent e) {
         if(e.getClickedInventory() instanceof PlayerInventory){
@@ -83,7 +69,7 @@ public class TreeGui extends FastInv implements Listener {
         }
     }
 
-    private void doProcess(Player p, ItemStack item, Cancellable e){
+    public static void doProcess(Player p, ItemStack item, Cancellable e){
         for(String line : NSanta.getInstance().getConfig().getStringList("christmas-tree.ingredients")){
             String[] split = line.split(":");
             if(split[0].equalsIgnoreCase(item.getType().name())){
@@ -98,14 +84,19 @@ public class TreeGui extends FastInv implements Listener {
                     if(current < max){
                         if(itemAmount > finalAmount){
                             item.setAmount(itemAmount - finalAmount);
-                            p.updateInventory();
                             TreeData.get().set("treedata." + split[0].toUpperCase(), max);
                             TreeData.save();
+                            p.closeInventory();
+                            NSanta.getInstance().getNPCSanta().smoothRotateNPC(20*10);
+                            Bukkit.broadcastMessage(NSanta.getInstance().getLanguageLoader().get("tree-integredient-added").replace("%player%", p.getName()).replace("%integredient%", split[0].toUpperCase()).replace("%amount%", String.valueOf(finalAmount)));
+
                         }else{
                             item.setAmount(0);
-                            p.updateInventory();
                             TreeData.get().set("treedata." + split[0].toUpperCase(), current + itemAmount);
                             TreeData.save();
+                            p.closeInventory();
+                            NSanta.getInstance().getNPCSanta().smoothRotateNPC(20*10);
+
                         }
                     }
                 }

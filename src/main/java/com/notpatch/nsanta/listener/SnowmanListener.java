@@ -2,8 +2,8 @@ package com.notpatch.nsanta.listener;
 
 import com.notpatch.nsanta.NSanta;
 import com.notpatch.nsanta.event.EntityDeathByEntityEvent;
+import com.notpatch.nsanta.util.ItemUtil;
 import com.notpatch.nsanta.util.StringUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -101,17 +99,9 @@ public class SnowmanListener implements Listener {
         if(!NSanta.getInstance().getConfig().getBoolean("advanced-snowman.rewards.enabled")) return;
         List<String> monsters = NSanta.getInstance().getConfig().getStringList("advanced-snowman.rewards.monsters");
         if (monsters.contains(victim.getType().name())) {
-            List<String> rewards = NSanta.getInstance().getConfig().getStringList("advanced-snowman.rewards.items-per-kill");
-            if(rewards.isEmpty()) return;
-            List<ItemStack> rewardItems = new ArrayList<>();
-            for (String reward : rewards) {
-                String[] rewardSplit = reward.split(":");
-                Material material = Material.getMaterial(rewardSplit[0]);
-                int amount = Integer.parseInt(rewardSplit[1]);
-                ItemStack item = new ItemStack(material, amount);
-                rewardItems.add(item);
-            }
-            rewardItems.forEach(item -> {creator.getInventory().addItem(item); });
+            List<ItemStack> rewards = ItemUtil.getItemsFromList(NSanta.getInstance().getConfig().getStringList("advanced-snowman.rewards.items-per-kill"));
+
+            rewards.forEach(item -> {creator.getInventory().addItem(item); });
 
             double money = NSanta.getInstance().getConfig().getDouble("advanced-snowman.rewards.money-per-kill");
             if(money > 0){
